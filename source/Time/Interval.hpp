@@ -11,6 +11,8 @@
 #include <cstdint>
 #include <time.h>
 
+#include <iosfwd>
+
 namespace Time
 {
 	enum class Clock : int {
@@ -39,6 +41,8 @@ namespace Time
 		
 		Interval(int seconds) noexcept : Interval({seconds, 0}) {}
 		Interval(double seconds) noexcept;
+		
+		const TimeT & as_timespec() const noexcept {return _value;}
 		
 		operator double() const noexcept
 		{
@@ -167,10 +171,12 @@ namespace Time
 		}
 		
 		const TimeT & value() const noexcept {return _value;}
-		const time_t seconds() const noexcept {return _value.tv_sec;}
+		const int64_t seconds() const noexcept {return _value.tv_sec;}
 		const int64_t nanoseconds() const noexcept {return _value.tv_nsec;}
 		
 	private:
 		TimeT _value = {0, 0};
 	};
+	
+	std::ostream & operator<<(std::ostream & out, const Interval & interval);
 }

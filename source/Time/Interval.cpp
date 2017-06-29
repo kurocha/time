@@ -8,6 +8,8 @@
 
 #include "Interval.hpp"
 
+#include <iomanip>
+
 namespace Time
 {
 	Interval::Interval(double seconds) noexcept
@@ -19,5 +21,23 @@ namespace Time
 	void Interval::sleep() noexcept
 	{
 		nanosleep(&_value,(struct timespec *)nullptr);
+	}
+	
+	std::ostream & operator<<(std::ostream & out, const Interval & interval)
+	{
+		auto seconds = interval.seconds();
+		auto nanoseconds = interval.nanoseconds();
+		
+		if (nanoseconds < 0) {
+			seconds -= 1;
+			nanoseconds += Interval::NS;
+		} else if (nanoseconds >= Interval::NS) {
+			seconds += 1;
+			nanoseconds -= Interval::NS;
+		}
+		
+		out << seconds << '.' << std::setfill('0') << std::internal << std::setw(9) << nanoseconds;
+		
+		return out;
 	}
 }

@@ -8,6 +8,8 @@
 
 #include "Timer.hpp"
 
+#include <iomanip>
+
 namespace Time
 {
 	Timer::Timer(const Clock & clock) noexcept : _clock(clock)
