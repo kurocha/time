@@ -30,7 +30,7 @@ namespace Time
 	{
 	public:
 		typedef struct timespec TimeT;
-		static constexpr std::uint64_t NS = 1000*1000*1000;
+		static constexpr std::int64_t NS = 1000*1000*1000;
 		
 		Interval(const Clock & clock = Clock::MONOTONIC) noexcept
 		{
@@ -171,8 +171,8 @@ namespace Time
 		}
 		
 		const TimeT & value() const noexcept {return _value;}
-		const int64_t seconds() const noexcept {return _value.tv_sec;}
-		const int64_t nanoseconds() const noexcept {return _value.tv_nsec;}
+		const std::int64_t seconds() const noexcept {return _value.tv_sec;}
+		const std::int64_t nanoseconds() const noexcept {return _value.tv_nsec;}
 		
 	private:
 		TimeT _value = {0, 0};
