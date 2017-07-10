@@ -8,6 +8,7 @@
 
 #include "Interval.hpp"
 
+#include <iostream>
 #include <iomanip>
 
 namespace Time
