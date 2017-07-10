@@ -37,7 +37,15 @@ namespace Time
 			nanoseconds -= Interval::NS;
 		}
 		
+		auto flags = out.flags();
+		auto fill = out.fill();
+		auto width = out.width();
+		
 		out << seconds << '.' << std::setfill('0') << std::internal << std::setw(9) << nanoseconds;
+		
+		out.width(width);
+		out.fill(fill);
+		out.flags(flags);
 		
 		return out;
 	}
