@@ -31,6 +31,7 @@ namespace Time
 	public:
 		typedef struct timespec TimeT;
 		static constexpr std::int64_t NS = 1000*1000*1000;
+		static constexpr std::int64_t MS = 1000;
 		
 		Interval(const Clock & clock = Clock::MONOTONIC) noexcept
 		{
@@ -43,10 +44,12 @@ namespace Time
 		Interval(double seconds) noexcept;
 		
 		const TimeT & as_timespec() const noexcept {return _value;}
+		std::int64_t as_milliseconds() const noexcept {return _value.tv_sec*MS + _value.tv_nsec/(NS/MS);}
+		double as_seconds() const noexcept {return static_cast<double>(_value.tv_sec) + static_cast<double>(_value.tv_nsec) / NS;}
 		
 		operator double() const noexcept
 		{
-			return static_cast<double>(_value.tv_sec) + static_cast<double>(_value.tv_nsec) / NS;
+			return as_seconds();
 		}
 		
 		void sleep() noexcept;
@@ -171,6 +174,7 @@ namespace Time
 		}
 		
 		const TimeT & value() const noexcept {return _value;}
+		
 		std::int64_t seconds() const noexcept {return _value.tv_sec;}
 		std::int64_t nanoseconds() const noexcept {return _value.tv_nsec;}
 		

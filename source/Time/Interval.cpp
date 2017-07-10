@@ -16,12 +16,12 @@ namespace Time
 	Interval::Interval(double seconds) noexcept
 	{
 		_value.tv_sec = seconds;
-		_value.tv_nsec =(seconds - _value.tv_sec) * NS;
+		_value.tv_nsec = (seconds - _value.tv_sec) * NS;
 	}
 	
 	void Interval::sleep() noexcept
 	{
-		nanosleep(&_value,(struct timespec *)nullptr);
+		nanosleep(&_value, (struct timespec *)nullptr);
 	}
 	
 	std::ostream & operator<<(std::ostream & out, const Interval & interval)

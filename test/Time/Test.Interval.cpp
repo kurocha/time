@@ -63,5 +63,13 @@ namespace Time
 				examiner.expect(cb) == Interval({0, 999999999});
 			}
 		},
+		
+		{"can be converted to milliseconds",
+			[](UnitTest::Examiner & examiner) {
+				Interval a(1.25);
+				
+				examiner.expect(a.as_milliseconds()) == 1250;
+			}
+		}
 	};
 }
