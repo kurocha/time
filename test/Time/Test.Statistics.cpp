@@ -19,7 +19,7 @@ namespace Time
 			[](UnitTest::Examiner & examiner) {
 				Statistics statistics;
 				
-				examiner.expect(statistics.count()) == 0;
+				examiner.expect(statistics.count()) == 0u;
 				examiner.expect(statistics.average_duration()) == Interval(0);
 				examiner.expect(statistics.minimum_duration()) == Interval(0);
 				examiner.expect(statistics.maximum_duration()) == Interval(0);
@@ -34,7 +34,7 @@ namespace Time
 				statistics.add(2);
 				statistics.add(3);
 				
-				examiner.expect(statistics.count()) == 3;
+				examiner.expect(statistics.count()) == 3u;
 				examiner.expect(statistics.average_duration()) == Interval(2.0);
 				examiner.expect(statistics.minimum_duration()) == Interval(1);
 				examiner.expect(statistics.maximum_duration()) == Interval(3);
@@ -52,7 +52,7 @@ namespace Time
 				
 				a += b;
 				
-				examiner.expect(a.count()) == 4;
+				examiner.expect(a.count()) == 4u;
 				examiner.expect(a.average_duration()) == Interval(5.0);
 				examiner.expect(a.minimum_duration()) == Interval(2);
 				examiner.expect(a.maximum_duration()) == Interval(8);
