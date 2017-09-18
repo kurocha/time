@@ -42,4 +42,14 @@ namespace Time
 		/// Add a sample from the timer, and then reset it.
 		void add(Timer & timer) noexcept;
 	};
+	
+	// Increments a counter on creation, decrements it on destruction.
+	template <typename ValueT>
+	struct Count
+	{
+		Count(ValueT & value) : value(value) {value += 1;}
+		~Count() {value -= 1;}
+		
+		ValueT & value;
+	};
 }
