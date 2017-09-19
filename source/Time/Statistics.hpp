@@ -35,14 +35,25 @@ namespace Time
 		const Interval & duration() const noexcept { return _duration; }
 		const std::uint64_t & update_count() const noexcept { return _count; }
 		
-		double updates_per_second() const noexcept;
-		double amortized_updates_per_second(const Time::Interval & duration) const noexcept;
+		double samples_per_second() const noexcept;
+		double amortized_samples_per_second(const Time::Interval & duration) const noexcept;
 		
 		/// Add a single sample.
 		void add(const Interval & duration) noexcept;
 		
 		/// Add a sample from the timer, and then reset it.
 		void add(Timer & timer) noexcept;
+		
+		struct Sample
+		{
+			Sample(Time::Statistics & statistics) : statistics(statistics) {}
+			~Sample() {statistics.add(timer);}
+			
+			Time::Statistics & statistics;
+			Time::Timer timer;
+		};
+		
+		Sample sample() noexcept {return Sample{*this};}
 	};
 	
 	// Increments a counter on creation, decrements it on destruction.

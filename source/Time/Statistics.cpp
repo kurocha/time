@@ -44,7 +44,7 @@ namespace Time
 		return static_cast<double>(_duration) / _count;
 	}
 	
-	double Statistics::updates_per_second() const noexcept
+	double Statistics::samples_per_second() const noexcept
 	{
 		double duration = _duration;
 		
@@ -53,7 +53,7 @@ namespace Time
 		return _count / duration;
 	}
 	
-	double Statistics::amortized_updates_per_second(const Time::Interval & duration) const noexcept
+	double Statistics::amortized_samples_per_second(const Time::Interval & duration) const noexcept
 	{
 		if (_count > 0) {
 			double amortized_average_time = duration / _count;
