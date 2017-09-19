@@ -52,6 +52,16 @@ namespace Time
 
 		return _count / duration;
 	}
+	
+	double Statistics::amortized_updates_per_second(const Time::Interval & duration) const noexcept
+	{
+		if (_count > 0) {
+			double amortized_average_time = duration / _count;
+			return 1.0 / amortized_average_time;
+		} else {
+			return 0;
+		}
+	}
 
 	void Statistics::add(const Interval & duration) noexcept
 	{

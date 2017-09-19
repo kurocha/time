@@ -28,13 +28,15 @@ namespace Time
 		std::uint64_t count() const noexcept {return _count;}
 
 		Interval average_duration() const noexcept;
-		double updates_per_second() const noexcept;
-
+		
 		const Interval & minimum_duration() const noexcept {return _min;}
 		const Interval & maximum_duration() const noexcept {return _max;}
 
 		const Interval & duration() const noexcept { return _duration; }
 		const std::uint64_t & update_count() const noexcept { return _count; }
+		
+		double updates_per_second() const noexcept;
+		double amortized_updates_per_second(const Time::Interval & duration) const noexcept;
 		
 		/// Add a single sample.
 		void add(const Interval & duration) noexcept;
