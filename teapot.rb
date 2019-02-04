@@ -3,7 +3,7 @@
 #  This file is part of the "Teapot" project, and is released under the MIT license.
 #
 
-teapot_version "1.3"
+teapot_version "3.0"
 
 # Project Metadata
 
@@ -20,12 +20,10 @@ end
 # Build Targets
 
 define_target 'time-library' do |target|
+	source_root = target.package.path + 'source'
+	
 	target.build do
-		source_root = target.package.path + 'source'
-		
-		copy headers: source_root.glob('Time/**/*.hpp')
-		
-		build static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
+		build prefix: target.name, static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
 	end
 	
 	target.depends 'Build/Files'
@@ -39,7 +37,11 @@ define_target 'time-library' do |target|
 	
 	target.provides "Library/Time" do
 		append linkflags [
-			->{install_prefix + 'lib/libTime.a'},
+			->{build_prefix + target.name + 'Time.a'},
+		]
+		
+		append buildflags [
+			"-I", ->{source_root},
 		]
 	end
 end
