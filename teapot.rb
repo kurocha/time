@@ -3,7 +3,7 @@
 #  This file is part of the "Teapot" project, and is released under the MIT license.
 #
 
-teapot_version "3.0"
+teapot_version "2.3"
 
 # Project Metadata
 
@@ -37,11 +37,11 @@ define_target 'time-library' do |target|
 	
 	target.provides "Library/Time" do
 		append linkflags [
-			->{build_prefix + target.name + 'Time.a'},
+			->{build_prefix + target.name + 'Time.a'}
 		]
 		
-		append buildflags [
-			"-I", ->{source_root},
+		append header_search_paths [
+			source_root
 		]
 	end
 end
