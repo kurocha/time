@@ -1,6 +1,5 @@
 # Setup the environment:
-sudo: false
-dist: trusty
+dist: xenial
 
 # Setup the compilers:
 matrix:
@@ -84,7 +83,7 @@ matrix:
 
 # Install required gems:
 install:
-  - gem install teapot --version "2.0.0-rc3"
+  - gem install teapot --version "2.3.0"
 
 # Run tests:
 script:
