@@ -3,7 +3,7 @@
 #  This file is part of the "Teapot" project, and is released under the MIT license.
 #
 
-teapot_version "2.3"
+teapot_version "3.0"
 
 # Project Metadata
 
@@ -20,45 +20,35 @@ end
 # Build Targets
 
 define_target 'time-library' do |target|
-	source_root = target.package.path + 'source'
-	
-	target.build do
-		build prefix: target.name, static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
-	end
-	
 	target.depends 'Build/Files'
 	target.depends 'Build/Clang'
 	
 	target.depends :platform
 	target.depends "Language/C++11", private: true
 	
-	target.depends "Build/Files"
-	target.depends "Build/Clang"
-	
 	target.provides "Library/Time" do
-		append linkflags [
-			->{build_prefix + target.name + 'Time.a'}
-		]
+		source_root = target.package.path + 'source'
 		
-		append header_search_paths [
-			source_root
-		]
+		library_path = build prefix: target.name, static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
+		
+		append linkflags library_path
+		append header_search_paths source_root
 	end
 end
 
 define_target "time-tests" do |target|
-	target.build do |*arguments|
-		test_root = target.package.path + 'test'
-		
-		run prefix: target.name, source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
-	end
-	
 	target.depends "Language/C++14", private: true
 	
 	target.depends "Library/UnitTest"
 	target.depends "Library/Time"
 	
-	target.provides "Test/Time"
+	target.provides "Test/Time" do |arguments|
+		test_root = target.package.path + 'test'
+		
+		# require 'pry'; binding.pry
+		
+		run prefix: environment.checksum, source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
+	end
 end
 
 # Configurations
