@@ -29,7 +29,7 @@ define_target 'time-library' do |target|
 	target.provides "Library/Time" do
 		source_root = target.package.path + 'source'
 		
-		library_path = build prefix: target.name, static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
+		library_path = build prefix: environment.checksum, static_library: "Time", source_files: source_root.glob('Time/**/*.cpp')
 		
 		append linkflags library_path
 		append header_search_paths source_root
@@ -37,15 +37,13 @@ define_target 'time-library' do |target|
 end
 
 define_target "time-tests" do |target|
-	target.depends "Language/C++14", private: true
-	
-	target.depends "Library/UnitTest"
 	target.depends "Library/Time"
+	
+	target.depends "Language/C++14", private: true
+	target.depends "Library/UnitTest"
 	
 	target.provides "Test/Time" do |arguments|
 		test_root = target.package.path + 'test'
-		
-		# require 'pry'; binding.pry
 		
 		run prefix: environment.checksum, source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
 	end
