@@ -16,7 +16,7 @@ matrix:
 
 # Install required gems:
 install:
-  - gem install teapot --version "2.3.0"
+  - gem install teapot --version "3.0.0"
 
 # Run tests:
 script:
