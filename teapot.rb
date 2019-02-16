@@ -20,7 +20,7 @@ end
 # Build Targets
 
 define_target 'time-library' do |target|
-	target.depends "Language/C++11", private: true
+	target.depends "Language/C++14"
 	
 	target.provides "Library/Time" do
 		source_root = target.package.path + 'source'
@@ -35,7 +35,7 @@ end
 define_target "time-tests" do |target|
 	target.depends "Library/Time"
 	
-	target.depends "Language/C++14", private: true
+	target.depends "Language/C++14"
 	target.depends "Library/UnitTest"
 	
 	target.provides "Test/Time" do |*arguments|
