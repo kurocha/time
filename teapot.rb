@@ -48,7 +48,7 @@ end
 # Configurations
 
 define_configuration "test" do |configuration|
-	configuration[:source] = "http://github.com/kurocha/"
+	configuration[:source] = "https://github.com/kurocha/"
 	
 	# Provides all the build related infrastructure:
 	configuration.require "platforms"
