@@ -33,15 +33,15 @@ define_target 'time-library' do |target|
 end
 
 define_target "time-tests" do |target|
+	target.depends "Library/UnitTest"
 	target.depends "Library/Time"
 	
 	target.depends "Language/C++14"
-	target.depends "Library/UnitTest"
 	
 	target.provides "Test/Time" do |*arguments|
 		test_root = target.package.path + 'test'
 		
-		run tests: 'Time', source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
+		run source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
 	end
 end
 
