@@ -43,6 +43,16 @@ namespace Time
 		Interval(int seconds) noexcept : Interval({seconds, 0}) {}
 		Interval(double seconds) noexcept;
 		
+		static Interval from_milliseconds(std::uint64_t milliseconds)
+		{
+			TimeT time;
+			
+			time.tv_sec = milliseconds / 1000;
+			time.tv_nsec = (milliseconds - time.tv_sec * 1000) * 1000000;
+			
+			return Interval(time);
+		}
+		
 		const TimeT & as_timespec() const noexcept {return _value;}
 		std::int64_t as_milliseconds() const noexcept {return _value.tv_sec*MS + _value.tv_nsec/(NS/MS);}
 		double as_seconds() const noexcept {return static_cast<double>(_value.tv_sec) + static_cast<double>(_value.tv_nsec) / NS;}
