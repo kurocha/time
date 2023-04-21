@@ -64,11 +64,35 @@ namespace Time
 			}
 		},
 		
+		{"can be converted from milliseconds",
+			[](UnitTest::Examiner & examiner) {
+				auto a = Interval::from_milliseconds(1250);
+				
+				examiner.expect(a) == Interval(1.25);
+			}
+		},
+		
 		{"can be converted to milliseconds",
 			[](UnitTest::Examiner & examiner) {
 				Interval a(1.25);
 				
 				examiner.expect(a.as_milliseconds()) == 1250;
+			}
+		},
+		
+		{"can be converted from nanoseconds",
+			[](UnitTest::Examiner & examiner) {
+				auto a = Interval::from_nanoseconds(1250000000);
+				
+				examiner.expect(a) == Interval(1.25);
+			}
+		},
+		
+		{"can be converted to nanoseconds",
+			[](UnitTest::Examiner & examiner) {
+				Interval a(1.25);
+				
+				examiner.expect(a.as_nanoseconds()) == 1250000000;
 			}
 		}
 	};
