@@ -1,5 +1,5 @@
 //
-//  Interval.hpp
+//  Queue.hpp
 //  File file is part of the "Time" project and released under the MIT License.
 //
 //  Created by Samuel Williams on 29/4/2023.
@@ -18,19 +18,19 @@
 namespace Time
 {
 	template <typename Handle>
-	class Scheduler
+	class Queue
 	{
 	public:
 		struct Event
 		{
-			Interval interval;
+			Timestamp timestamp;
 			Handle handle;
 			
-			Event(const Interval & interval_, const Handle & handle_) : interval(interval_), handle(handle_) {}
+			Event(const Timestamp & timestamp_, const Handle & handle_) : timestamp(timestamp_), handle(handle_) {}
 			
 			bool operator<(const Event & other) const noexcept
 			{
-				return interval > other.interval;
+				return timestamp > other.timestamp;
 			}
 		};
 		
@@ -43,9 +43,9 @@ namespace Time
 			}
 		};
 		
-		EventReference schedule(const Interval & interval, Handle & handle)
+		EventReference schedule(const Timestamp & timestamp, Handle & handle)
 		{
-			auto reference = std::make_shared<Event>(interval, handle);
+			auto reference = std::make_shared<Event>(timestamp, handle);
 			
 			_events.push(reference);
 			
@@ -57,13 +57,13 @@ namespace Time
 			return _events.empty();
 		}
 		
-		std::optional<Interval> delta() const
+		std::optional<Timestamp> next_timestamp() const
 		{
 			while (!_events.empty()) {
 				auto & event = _events.top();
 				
 				if (event->handle) {
-					return event->interval;
+					return event->timestamp;
 				} else {
 					_events.pop();
 				}
@@ -74,15 +74,15 @@ namespace Time
 		
 		bool waiting() const
 		{
-			return static_cast<bool>(delta());
+			return static_cast<bool>(next_timestamp());
 		}
 		
-		void run(const Interval & now)
+		void run(const Timestamp & now)
 		{
 			while (!_events.empty()) {
 				auto event = _events.top();
 				
-				if (event->interval > now)
+				if (event->timestamp > now)
 					break;
 				
 				_events.pop();
@@ -91,9 +91,9 @@ namespace Time
 			}
 		}
 		
-		Interval now() const noexcept
+		Timestamp now() const noexcept
 		{
-			return Interval(_clock);
+			return Timestamp(_clock);
 		}
 		
 		void run()
