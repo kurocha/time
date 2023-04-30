@@ -15,17 +15,17 @@ namespace Time
 	class Timeout : public Stopwatch
 	{
 	protected:
-		Interval _duration;
+		Duration _duration;
 		
 	public:
-		Timeout(const Interval & duration, const Clock & clock = Clock::MONOTONIC) noexcept : Stopwatch(clock), _duration(duration) {}
+		Timeout(const Duration & duration, const Clock & clock = Clock::MONOTONIC) noexcept : Stopwatch(clock), _duration(duration) {}
 		
-		const Interval & duration() const noexcept {return _duration;}
+		const Duration & duration() const noexcept {return _duration;}
 		
 		/// Returns whether the duration has passed.
 		bool expired() const noexcept;
 
 		/// This function returns the time remaining, which may be negative if the Stopwatch has gone past the timeout.
-		Interval remaining() const noexcept;
+		Duration remaining() const noexcept;
 	};
 }

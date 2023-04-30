@@ -17,14 +17,14 @@ namespace Time
 		
 		{"it can measure time",
 			[](UnitTest::Examiner & examiner) {
-				auto iota = Interval({0, 1});
+				auto iota = Interval(0, 1);
 				Stopwatch stopwatch;
 				
 				examiner.expect(stopwatch.time()) == Interval(0);
 				
 				stopwatch.start();
 				
-				Interval({0, 1}).sleep();
+				Interval(0, 1).sleep();
 				
 				auto duration = stopwatch.stop();
 				examiner.expect(duration) >= iota;

@@ -14,11 +14,11 @@ namespace Time
 {
 	void Stopwatch::reset() noexcept
 	{
-		_total = 0;
+		_total = Duration();
 		_running = false;
 	}
 	
-	Interval Stopwatch::time() const noexcept
+	Duration Stopwatch::time() const noexcept
 	{
 		if (_running) {
 			return _total + Timer::time();
@@ -37,7 +37,7 @@ namespace Time
 		}
 	}
 	
-	Interval Stopwatch::stop()
+	Duration Stopwatch::stop()
 	{
 		if (_running) {
 			auto duration = Timer::time();

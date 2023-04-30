@@ -19,7 +19,7 @@ namespace Time
 			[](UnitTest::Examiner & examiner) {
 				Timer timer;
 				
-				Interval({0, 1}).sleep();
+				Interval(0, 1).sleep();
 				
 				examiner.expect(timer.time()) > Interval(0);
 			}

@@ -22,7 +22,7 @@ namespace Time
 				Timestamp now;
 				
 				Duration duration(now);
-				examiner.expect(duration).to(be <= Duration(0.0));
+				examiner.expect(duration).to(be >= Duration(0.0));
 			}
 		},
 	};

@@ -48,19 +48,19 @@ namespace Time
 		
 		{"can be subtracted precisely",
 			[](UnitTest::Examiner & examiner) {
-				Interval a({1, 1}), b({2, 2}), c({3, 1});
+				Interval a(1, 1), b(2, 2), c(3, 1);
 				
 				// The reason for this unusal result is that it's the same as {-1, -1}.
 				// But we prefer if the right hand side is not negative in any case.
 				
 				auto ab = a - b;
-				examiner.expect(ab) == Interval({-2, 999999999});
+				examiner.expect(ab) == Interval(-2, 999999999);
 				
 				auto abb = ab + b;
 				examiner.expect(abb) == a;
 				
 				auto cb = c - b;
-				examiner.expect(cb) == Interval({0, 999999999});
+				examiner.expect(cb) == Interval(0, 999999999);
 			}
 		},
 		

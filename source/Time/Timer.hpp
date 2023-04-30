@@ -15,7 +15,7 @@ namespace Time
 	class Timer {
 	protected:
 		const Clock _clock;
-		Interval _last;
+		Timestamp _last;
 		
 	public:
 		/// Resets the timer using the given clock.
@@ -25,6 +25,6 @@ namespace Time
 		void reset() noexcept;
 		
 		/// The amount of time since the last call to reset.
-		Interval time() const noexcept;
+		Duration time() const noexcept;
 	};
 }

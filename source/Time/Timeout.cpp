@@ -15,7 +15,7 @@ namespace Time
 		return time() >= _duration;	
 	}
 	
-	Interval Timeout::remaining() const noexcept
+	Duration Timeout::remaining() const noexcept
 	{
 		return _duration - time();
 	}

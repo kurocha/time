@@ -18,11 +18,10 @@ namespace Time
 	}
 	
 	void Timer::reset() noexcept {
-		_last = Interval(_clock);
+		_last = Timestamp(_clock);
 	}
 
-	Interval Timer::time() const noexcept {
-		auto current = Interval(_clock);
-		return current - _last;
+	Duration Timer::time() const noexcept {
+		return Duration(_last);
 	}
 }

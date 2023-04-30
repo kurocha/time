@@ -40,7 +40,7 @@ namespace Time
 		
 		Interval(const TimeT & value) noexcept : _value(value) {}
 		
-		Interval(int seconds) noexcept : Interval({seconds, 0}) {}
+		Interval(int seconds, int nanoseconds = 0) noexcept : Interval(TimeT{seconds, nanoseconds}) {}
 		Interval(double seconds) noexcept;
 		
 		static Interval from_nanoseconds(std::uint64_t nanoseconds)
@@ -77,7 +77,7 @@ namespace Time
 		
 		Interval operator-() const noexcept
 		{
-			return Interval({_value.tv_sec * -1, _value.tv_nsec});
+			return Interval(_value.tv_sec * -1, _value.tv_nsec);
 		}
 		
 		Interval operator-(const Interval & other) const noexcept
@@ -212,9 +212,24 @@ namespace Time
 	{
 	public:
 		Duration() : Interval(0) {}
+		
 		explicit Duration(const Interval & interval) : Interval(interval) {}
 		
+		Duration(int seconds, int nanoseconds = 0) noexcept : Interval(seconds, nanoseconds) {}
+		Duration(double seconds) noexcept : Interval(seconds) {}
+		
+		// Compute a duration from the difference between now and the given timestamp.
 		Duration(const Timestamp & timestamp, Clock clock = Clock::MONOTONIC);
+		
+		static Duration from_nanoseconds(std::uint64_t nanoseconds)
+		{
+			return Duration(Interval::from_nanoseconds(nanoseconds));
+		}
+		
+		static Duration from_milliseconds(std::uint64_t milliseconds)
+		{
+			return Duration(Interval::from_milliseconds(milliseconds));
+		}
 		
 		Duration operator+(const Duration & other) const noexcept
 		{
@@ -246,8 +261,21 @@ namespace Time
 		Timestamp(const Clock & clock = Clock::MONOTONIC) : Interval(clock) {}
 		explicit Timestamp(const Interval & interval) : Interval(interval) {}
 		
+		Timestamp(int seconds, int nanoseconds = 0) noexcept : Timestamp(Interval(seconds, nanoseconds)) {}
+		Timestamp(double seconds) noexcept : Timestamp(Interval(seconds)) {}
+		
 		// Construct an absolute time relative to now().
 		Timestamp(const Duration & duration, Clock clock = Clock::MONOTONIC) : Interval(Interval(clock) + duration) {}
+		
+		static Timestamp from_nanoseconds(std::uint64_t nanoseconds)
+		{
+			return Timestamp(Interval::from_nanoseconds(nanoseconds));
+		}
+		
+		static Timestamp from_milliseconds(std::uint64_t milliseconds)
+		{
+			return Timestamp(Interval::from_milliseconds(milliseconds));
+		}
 		
 		Timestamp operator+(const Duration & duration) const noexcept
 		{
@@ -275,7 +303,7 @@ namespace Time
 		}
 	};
 	
-	inline Duration::Duration(const Timestamp & timestamp, Clock clock) : Interval(timestamp - Timestamp(clock)) {}
+	inline Duration::Duration(const Timestamp & timestamp, Clock clock) : Interval(Timestamp(clock) - timestamp) {}
 	
 	inline Timestamp Duration::operator+(const Timestamp & timestamp) const noexcept
 	{

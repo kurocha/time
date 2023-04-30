@@ -14,7 +14,7 @@ namespace Time
 {
 	class Stopwatch : private Timer {
 	protected:
-		Interval _total = 0;
+		Duration _total;
 		bool _running = false;
 		
 	public:
@@ -24,13 +24,13 @@ namespace Time
 		void reset() noexcept;
 		
 		/// The accumulated time since calling reset.
-		Interval time() const noexcept;
+		Duration time() const noexcept;
 		
 		/// Start accumulating time.
 		void start();
 		
 		/// Stop accumulating time. Returns the amount of time since calling `start()`.
-		Interval stop();
+		Duration stop();
 		
 		bool running() const noexcept
 		{

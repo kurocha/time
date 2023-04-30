@@ -17,7 +17,7 @@ namespace Time
 		
 		{"it can expire",
 			[](UnitTest::Examiner & examiner) {
-				Interval iota({0, 1});
+				Duration iota(0, 1);
 				Timeout timeout(iota);
 				
 				examiner.expect(timeout.expired()) == false;
