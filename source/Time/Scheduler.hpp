@@ -17,67 +17,39 @@
 
 namespace Time
 {
+	template <typename Handle>
 	class Scheduler
 	{
 	public:
-		typedef std::function<void ()> Callback;
-		
-		class Handle;
-		
 		struct Event
 		{
-			Handle *handle;
 			Interval interval;
+			Handle handle;
 			
-			Event(Handle * handle_, const Interval & interval_) : handle(handle_), interval(interval_) {}
-		};
-		
-		class Handle
-		{
-			Scheduler & _scheduler;
-			Callback _callback;
-			std::shared_ptr<Event> _event;
+			Event(const Interval & interval_, const Handle & handle_) : interval(interval_), handle(handle_) {}
 			
-		public:
-			Handle(Scheduler & scheduler, Callback callback) : _scheduler(scheduler), _callback(callback) {}
-			
-			~Handle()
+			bool operator<(const Event & other) const noexcept
 			{
-				cancel();
-			}
-			
-			void trigger()
-			{
-				_callback();
-			}
-			
-			void cancel()
-			{
-				if (_event) {
-					_event->handle = nullptr;
-					_event.reset();
-				}
-			}
-			
-			void schedule(const Interval & interval)
-			{
-				if (!_event) {
-					_event = std::make_shared<Event>(this, interval);
-				}
-				
-				_scheduler.schedule(_event);
-			}
-			
-			void reschedule(const Interval & interval)
-			{
-				cancel();
-				schedule(interval);
+				return interval > other.interval;
 			}
 		};
 		
-		void schedule(std::shared_ptr<Event> event)
+		using EventReference = std::shared_ptr<Event>;
+		struct EventReferenceCompare
 		{
-			_events.push(event);
+			bool operator()(const EventReference & a, const EventReference & b) const noexcept
+			{
+				return *a < *b;
+			}
+		};
+		
+		EventReference schedule(const Interval & interval, Handle & handle)
+		{
+			auto reference = std::make_shared<Event>(interval, handle);
+			
+			_events.push(reference);
+			
+			return reference;
 		}
 		
 		bool empty() const noexcept
@@ -85,19 +57,24 @@ namespace Time
 			return _events.empty();
 		}
 		
-		std::optional<Interval> delta()
+		std::optional<Interval> delta() const
 		{
 			while (!_events.empty()) {
-				auto event = _events.top();
+				auto & event = _events.top();
 				
 				if (event->handle) {
-					return event->interval - Interval(_clock);
+					return event->interval;
 				} else {
 					_events.pop();
 				}
 			}
 			
-			return {};
+			return std::nullopt;
+		}
+		
+		bool waiting() const
+		{
+			return static_cast<bool>(delta());
 		}
 		
 		void run(const Interval & now)
@@ -110,28 +87,23 @@ namespace Time
 				
 				_events.pop();
 				
-				if (event->handle)
-					event->handle->trigger();
+				event->handle();
 			}
+		}
+		
+		Interval now() const noexcept
+		{
+			return Interval(_clock);
 		}
 		
 		void run()
 		{
-			run(Interval(_clock));
+			run(now());
 		}
 		
 	protected:
-		using SharedEvent = std::shared_ptr<Event>;
-		
-		struct CompareEvent
-		{
-			bool operator()(const SharedEvent & a, const SharedEvent & b) const noexcept
-			{
-				return a->interval > b->interval;
-			}
-		};
-		
 		Clock _clock = Clock::MONOTONIC;
-		std::priority_queue<SharedEvent, std::vector<SharedEvent>, CompareEvent> _events;
+		
+		mutable std::priority_queue<EventReference, std::vector<EventReference>, EventReferenceCompare> _events;
 	};
 }
