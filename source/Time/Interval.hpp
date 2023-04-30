@@ -204,4 +204,81 @@ namespace Time
 	};
 	
 	std::ostream & operator<<(std::ostream & out, const Interval & interval);
+	
+	class Timestamp;
+	
+	// A duration is a relative point in time.
+	class Duration : public Interval
+	{
+	public:
+		Duration() : Interval(0) {}
+		explicit Duration(const Interval & interval) : Interval(interval) {}
+		
+		Duration(const Timestamp & timestamp, Clock clock = Clock::MONOTONIC);
+		
+		Duration operator+(const Duration & other) const noexcept
+		{
+			return Duration(Interval::operator+(other));
+		}
+		
+		Duration operator-(const Duration & other) const noexcept
+		{
+			return Duration(Interval::operator-(other));
+		}
+		
+		Duration & operator+=(const Duration & other) noexcept
+		{
+			return ((*this) = (*this) + other);
+		}
+		
+		Duration & operator-=(const Duration & other) noexcept
+		{
+			return ((*this) = (*this) - other);
+		}
+		
+		Timestamp operator+(const Timestamp & timestamp) const noexcept;
+	};
+	
+	// A timestamp is an absolute point in time.
+	class Timestamp : public Interval
+	{
+	public:
+		Timestamp(const Clock & clock = Clock::MONOTONIC) : Interval(clock) {}
+		explicit Timestamp(const Interval & interval) : Interval(interval) {}
+		
+		// Construct an absolute time relative to now().
+		Timestamp(const Duration & duration, Clock clock = Clock::MONOTONIC) : Interval(Interval(clock) + duration) {}
+		
+		Timestamp operator+(const Duration & duration) const noexcept
+		{
+			return Timestamp(Interval::operator+(duration));
+		}
+		
+		Timestamp operator-(const Duration & duration) const noexcept
+		{
+			return Timestamp(Interval::operator-(duration));
+		}
+		
+		Timestamp & operator+=(const Duration & duration) noexcept
+		{
+			return ((*this) = (*this) + duration);
+		}
+		
+		Timestamp & operator-=(const Duration & duration) noexcept
+		{
+			return ((*this) = (*this) - duration);
+		}
+		
+		Duration operator-(const Timestamp & other) const noexcept
+		{
+			return Duration(Interval::operator-(other));
+		}
+	};
+	
+	inline Duration::Duration(const Timestamp & timestamp, Clock clock) : Interval(timestamp - Timestamp(clock)) {}
+	
+	inline Timestamp Duration::operator+(const Timestamp & timestamp) const noexcept
+	{
+		return Timestamp(Interval::operator+(timestamp));
+	}
 }

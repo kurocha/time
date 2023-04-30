@@ -37,17 +37,20 @@ define_target "time-tests" do |target|
 	target.depends "Library/Time"
 	
 	target.depends "Language/C++17"
+	target.depends 'Build/Compile/Commands'
 	
 	target.provides "Test/Time" do |*arguments|
 		test_root = target.package.path + 'test'
 		
 		run source_files: test_root.glob('Time/**/*.cpp'), arguments: arguments
+		
+		compile_commands destination_path: (test_root + "compile_commands.json")
 	end
 end
 
 # Configurations
 
-define_configuration "test" do |configuration|
+define_configuration "development" do |configuration|
 	configuration[:source] = "https://github.com/kurocha/"
 	
 	# Provides all the build related infrastructure:
@@ -59,6 +62,7 @@ define_configuration "test" do |configuration|
 	
 	# Provides some useful C++ generators:
 	configuration.require "generate-project"
-	configuration.require "generate-travis"
 	configuration.require "generate-cpp-class"
+	
+	configuration.require "build-compile-commands"
 end

@@ -2,7 +2,7 @@
 
 Provides useful `Time::Timer`, `Time::Timeout`, `Time::Stopwatch`, `Time::Statistics` abstractions using `Time::Interval` which works directly with POSIX `clock_gettime` using by default a monotonic clock.
 
-[![Build Status](https://travis-ci.org/kurocha/time.svg?branch=master)](https://travis-ci.org/kurocha/time)
+[![Test](https://github.com/kurocha/time/actions/workflows/test.yaml/badge.svg)](https://github.com/kurocha/time/actions/workflows/test.yaml)
 
 ## Setup
 
