@@ -43,7 +43,7 @@ namespace Time
 			}
 		};
 		
-		EventReference schedule(const Timestamp & timestamp, Handle & handle)
+		EventReference schedule(const Timestamp & timestamp, const Handle & handle)
 		{
 			auto reference = std::make_shared<Event>(timestamp, handle);
 			
