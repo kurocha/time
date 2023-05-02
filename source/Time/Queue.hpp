@@ -79,14 +79,9 @@ namespace Time
 		
 		void run(const Timestamp & now)
 		{
-			while (!_events.empty()) {
+			while (!_events.empty() && _events.top()->timestamp <= now) {
 				auto event = _events.top();
-				
-				if (event->timestamp > now)
-					break;
-				
 				_events.pop();
-				
 				event->handle();
 			}
 		}
